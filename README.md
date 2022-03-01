@@ -15,5 +15,5 @@ too much memory.
 source ~/emsdk/emsdk_env.sh
 ./native/build.sh
 npm run build # Minifed build
-npm start # or start development order
+npm start # or start development server
 ```
