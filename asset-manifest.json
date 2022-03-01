@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/xdelta-wasm/static/js/main.add1b3bc.js",
+    "index.html": "/xdelta-wasm/index.html",
+    "main.add1b3bc.js.map": "/xdelta-wasm/static/js/main.add1b3bc.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.add1b3bc.js"
+  ]
+}
