@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chakra-ui/icons": "^1.1.7",
     "@chakra-ui/react": "^1.8.6",
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
@@ -14,6 +15,8 @@
     "react-dom": "^17.0.2",
     "react-icons": "^3.11.0",
     "react-scripts": "5.0.0",
+    "streamsaver": "^2.0.6",
+    "web-streams-polyfill": "^3.2.0",
     "web-vitals": "^0.2.4"
   },
   "scripts": {

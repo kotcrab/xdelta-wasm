@@ -1,0 +1,7 @@
+﻿---
+ColumnLimit: 125
+PointerAlignment: Left
+IndentWidth: 2
+AllowShortIfStatementsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+...

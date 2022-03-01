@@ -22,4 +22,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+.vscode/settings.json
 /.idea
+/public/xdelta3.js
+/public/xdelta3.wasm
+/native/out/*.o
