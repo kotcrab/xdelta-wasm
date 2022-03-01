@@ -31,6 +31,14 @@ export default function PatchForm() {
     let fileStream = null
     let writer = null
 
+    const lastDot = sourceFile.name.lastIndexOf(".")
+    let patchedName;
+    if (lastDot === -1) {
+      patchedName = `${sourceFile.name}-patched`
+    } else {
+      patchedName = `${sourceFile.name.substring(0, lastDot)}-patched.${sourceFile.name.substring(lastDot + 1)}`
+    }
+
     worker.onmessage = function (e) {
       if (!e.data) {
         return
@@ -38,7 +46,7 @@ export default function PatchForm() {
       const {final} = e.data
       if (!final) {
         if (!fileStream && !writer) {
-          fileStream = streamSaver.createWriteStream("patched.bin")
+          fileStream = streamSaver.createWriteStream(patchedName)
           writer = fileStream.getWriter()
         }
         writer.write(e.data.bytes)
