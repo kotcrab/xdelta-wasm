@@ -1,6 +1,6 @@
 # xdelta-wasm
 
-Proof of concept xdelta3 patcher running in the browser.
+Xdelta patcher running in the browser.
 
 ### How this works
 
