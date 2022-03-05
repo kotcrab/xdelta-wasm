@@ -13,7 +13,7 @@ export default function ModalForm({children}) {
       {children}
       <Spacer/>
       <VStack alignSelf="center">
-        <Text align="center">This app runs client side, no files are actually uploaded or downloaded.</Text>
+        <Text align="center">This app runs client-side, no files are actually uploaded or downloaded.</Text>
         <Link href='https://github.com/kotcrab/xdelta-wasm' isExternal>
           <Icon as={FaGithub} mx="2px"/> Source code
         </Link>
