@@ -2,6 +2,8 @@
 
 Xdelta patcher running in the browser.
 
+### [Try it here](https://kotcrab.github.io/xdelta-wasm/)
+
 ### How this works
 
 Frontend in React allows for selecting input and patch files.
