@@ -1,6 +1,6 @@
 import React from "react"
 import ColorModeSwitcher from "./ColorModeSwitcher"
-import {Box, Flex, Icon, Link, Spacer} from "@chakra-ui/react"
+import {Box, Flex, Icon, Link, Spacer, Text, VStack} from "@chakra-ui/react"
 import {FaGithub} from "react-icons/all"
 
 export default function ModalForm({children}) {
@@ -12,11 +12,12 @@ export default function ModalForm({children}) {
       <Spacer/>
       {children}
       <Spacer/>
-      <Box alignSelf="center">
+      <VStack alignSelf="center">
+        <Text align="center">This app runs client side, no files are actually uploaded or downloaded.</Text>
         <Link href='https://github.com/kotcrab/xdelta-wasm' isExternal>
           <Icon as={FaGithub} mx="2px"/> Source code
         </Link>
-      </Box>
+      </VStack>
     </Flex>
   )
 }

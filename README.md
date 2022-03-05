@@ -17,3 +17,9 @@ source ~/emsdk/emsdk_env.sh
 npm run build # Minified build
 npm start # or start development server
 ```
+
+### Deploy
+
+```
+npm run deploy
+```
