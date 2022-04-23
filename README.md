@@ -2,7 +2,7 @@
 
 Online xdelta patcher. It supports xdelta3 format with secondary compression enabled.
 
-### [Try it here](https://kotcrab.github.io/xdelta-wasm/)
+### [Try it here!](https://kotcrab.github.io/xdelta-wasm/)
 
 ### How this works
 
@@ -13,7 +13,7 @@ too much memory.
 
 ### Building
 
-Make sure to setup [Emscripten](https://emscripten.org/docs/getting_started/downloads.html) first. If you're on Windows you will need to use WSL.
+Make sure to setup [Emscripten](https://emscripten.org/docs/getting_started/downloads.html) first. If you're on Windows you'll need to use WSL.
 
 ```
 source ~/emsdk/emsdk_env.sh
