@@ -1,5 +1,5 @@
 import React, {useState} from "react"
-import {Badge, Box, Button, Flex, FormControl, FormLabel, Heading} from "@chakra-ui/react"
+import {Box, Button, Flex, FormControl, FormLabel, Heading} from "@chakra-ui/react"
 import ModalForm from "./ModalForm"
 import FilePicker from "./FilePicker"
 import ErrorMessage from "./ErrorMessage"
@@ -78,7 +78,7 @@ export default function PatchForm() {
       <Flex width="full" align="center" justifyContent="center">
         <Box p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg">
           <Box textAlign="center">
-            <Heading>Xdelta patcher <Badge colorScheme="orange">Beta</Badge></Heading>
+            <Heading>Xdelta patcher</Heading>
           </Box>
           <Box my={4} textAlign="left">
             <form onSubmit={handleSubmit}>
