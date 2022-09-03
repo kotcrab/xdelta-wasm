@@ -2,7 +2,7 @@
 
 Online xdelta patcher. It supports xdelta3 format with secondary compression enabled.
 
-### [Try it here!](https://kotcrab.github.io/xdelta-wasm/)
+### [Use it here!](https://kotcrab.github.io/xdelta-wasm/)
 
 ### How this works
 
