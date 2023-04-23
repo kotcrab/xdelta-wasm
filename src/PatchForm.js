@@ -29,6 +29,7 @@ export default function PatchForm() {
     window.xdelta3Worker = worker
 
     streamSaver.WritableStream = ponyfill.WritableStream
+    streamSaver.mitm = 'mitm.html'
     let fileStream = null
     let writer = null
 
