@@ -5,7 +5,7 @@ import {FaGithub} from "react-icons/all"
 
 export default function ModalForm({children}) {
   return (
-    <Flex minH="100vh" direction="column" p={3}>
+    <Flex minH="100svh" direction="column" p={3}>
       <Box alignSelf="flex-end">
         <ColorModeSwitcher/>
       </Box>
