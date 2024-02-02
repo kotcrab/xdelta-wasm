@@ -14,12 +14,26 @@ too much memory.
 ### Building
 
 Make sure to setup [Emscripten](https://emscripten.org/docs/getting_started/downloads.html) first. If you're on Windows you'll need to use WSL.
-
+First setup emsdk:
 ```
 source ~/emsdk/emsdk_env.sh
+```
 
-./native/build.sh # Rerun everytime you change something in the native directory
+Next you will need to build XZ Utils, this needs to be done only once:
 
+```
+./native/build-xz.sh
+```
+
+Now you can build the xdelta itself, this needs to be re-run if the xdelta sources change:
+
+```
+./native/build.sh
+```
+
+Finally, you can build the frontend or start the development server.
+
+```
 npm run build     # Minified build
 npm start         # or start development server
 ```
