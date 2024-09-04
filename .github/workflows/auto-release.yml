@@ -1,0 +1,39 @@
+name: Automatic Semantic Release
+
+on:
+  # workflow_dispatch # manual-only for testing
+  push:
+    branches: 
+      - main 
+jobs: 
+  new-release: 
+    runs-on: ubuntu-latest
+    env:
+      ACTIONS_STEP_DEBUG: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # Checkout our working repository
+      - name: Conventional Changelog Action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v5
+        with:
+          github-token: ${{ secrets.GH_TOKEN }}
+          output-file: 'CHANGELOG.md'
+          version-file: 'package.json'
+      - name: Debug Changelog Outputs
+        run: |
+          echo "Skipped: ${{ steps.changelog.outputs.skipped }}"
+          echo "Tag: ${{ steps.changelog.outputs.tag }}"
+          echo "Clean Changelog: ${{ steps.changelog.outputs.clean_changelog }}"
+          echo "Outputs Skipped: ${{ steps.changelog.outputs.skipped }}"
+      - name: Create Release # This action will create the actual release 
+        uses: actions/create-release@v1 
+        if: ${{ steps.changelog.outputs.skipped == 'false' }} 
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} 
+        with: 
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          release_name: ${{ steps.changelog.outputs.tag }} 
+          body: ${{ steps.changelog.outputs.clean_changelog }}
+
+ 
