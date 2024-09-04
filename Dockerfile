@@ -17,17 +17,29 @@ RUN apt-get update && apt-get install -y \
 ENV EMSDK /emsdk
 ENV PATH $EMSDK:$EMSDK/upstream/emscripten:$PATH
 
-# Download and install precompiled Emscripten SDK
-RUN wget https://github.com/emscripten-core/emsdk/archive/refs/tags/3.1.65.tar.gz && \
-    tar -xzf 3.1.65.tar.gz && \
-    mv emsdk-3.1.65 $EMSDK && \
-    cd $EMSDK && \
-    ./emsdk install 3.1.65 && \
-    ./emsdk activate 3.1.65 && \
-    bash -c "source $EMSDK/emsdk_env.sh" && \
-    rm -f /3.1.65.tar.gz
+# Step 1: Download Emscripten SDK archive
+RUN wget https://github.com/emscripten-core/emsdk/archive/refs/tags/3.1.65.tar.gz
 
-# Create and set working directory
+# Step 2: Extract the archive
+RUN tar -xzf 3.1.65.tar.gz
+
+# Step 3: Move the extracted folder to $EMSDK
+RUN mv emsdk-3.1.65 $EMSDK
+
+# Step 4: Change directory to $EMSDK and install the specific version
+WORKDIR $EMSDK
+RUN ./emsdk install 3.1.65
+
+# Step 5: Activate the installed version
+RUN ./emsdk activate 3.1.65
+
+# Step 6: Load Emscripten environment variables (this will apply them for future commands in this Dockerfile)
+RUN bash -c ". $EMSDK/emsdk_env.sh"
+
+# Step 7: Clean up the downloaded tar.gz file
+RUN rm -f /3.1.65.tar.gz
+
+# Set working directory back to /app
 WORKDIR /app
 
 # Copy the project files into the container
