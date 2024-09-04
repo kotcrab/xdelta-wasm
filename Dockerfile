@@ -1,17 +1,18 @@
-# Use an official Node.js image as the base
-FROM node:18
+# Use an Alpine base image with Node.js
+FROM node:18-alpine
 
 # Install necessary packages for running xdelta3, xz-utils, and Emscripten
-RUN apt-get update && apt-get install -y \
-    build-essential \
+RUN apk update && apk add --no-cache \
+    bash \
+    build-base \
     python3 \
     git \
     cmake \
-    ninja-build \
+    ninja \
     wget \
     xdelta3 \
-    xz-utils \
-    && rm -rf /var/lib/apt/lists/*
+    xz \
+    && rm -rf /var/cache/apk/*
 
 # Set environment variables for Emscripten
 ENV EMSDK /emsdk
@@ -48,6 +49,9 @@ COPY . .
 # Install npm dependencies
 RUN npm install
 
+# Add healthcheck for startup
+HEALTHCHECK --interval=60s --timeout=3s --retries=5 CMD curl -f http://localhost:3000/ || exit 1
+
 # Default command to run the development server
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
 
