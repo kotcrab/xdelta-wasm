@@ -1,0 +1,10 @@
+services:
+  xdelta-wasm:
+    container_name: xdelta-wasm
+    image: telnetdoogie/xdelta-wasm-docker:latest
+    restart: unless-stopped
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+    ports:
+      - 9090:3000/tcp		#change 9090 to the port you'd like to use
+    
