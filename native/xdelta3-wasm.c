@@ -4,19 +4,19 @@
 #include <sys/stat.h>
 
 size_t readSource(void* buffer, size_t offset, size_t size) {
-  return EM_ASM_INT({ return readSource($0, $1, $2); }, buffer, offset, size);
+  return EM_ASM_INT({ return Module.readSource($0, $1, $2); }, buffer, offset, size);
 }
 
 size_t readPatch(void* buffer, size_t offset, size_t size) {
-  return EM_ASM_INT({ return readPatch($0, $1, $2); }, buffer, offset, size);
+  return EM_ASM_INT({ return Module.readPatch($0, $1, $2); }, buffer, offset, size);
 }
 
 void writeOutput(void* buffer, size_t size) {
-  EM_ASM({outputFile($0, $1)}, buffer, size);
+  EM_ASM({Module.outputFile($0, $1)}, buffer, size);
 }
 
 void reportError(const char* buffer) {
-  EM_ASM({reportError($0)}, buffer);
+  EM_ASM({Module.reportError($0)}, buffer);
 }
 
 int processData(int bufferSize) {
@@ -33,7 +33,6 @@ int processData(int bufferSize) {
   memset(&stream, 0, sizeof(stream));
   memset(&source, 0, sizeof(source));
   xd3_config_stream(&stream, &config);
-  config.winsize = bufferSize;
 
   // Init input
   source.blksize = bufferSize;
@@ -105,8 +104,9 @@ int processData(int bufferSize) {
 };
 
 int main(int argc, char* argv[]) {
-  printf("In main()\n");
-  int ret = processData(0x10000);
+  int bufferSize = atoi(argv[1]);
+  printf("In main(), bufferSize=%d\n", bufferSize);
+  int ret = processData(bufferSize);
   if (ret) {
     fprintf(stderr, "Decode error: %d\n", ret);
     return ret;

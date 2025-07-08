@@ -25,7 +25,7 @@ export default function PatchForm() {
     setRunning(true)
     setErrorMessage(null)
     setExtraErrorMessage(null)
-    const worker = new Worker('./xdelta3.worker.js')
+    const worker = new Worker('./xdelta3.worker.js', {type: "module"})
     window.xdelta3Worker = worker
 
     streamSaver.WritableStream = ponyfill.WritableStream

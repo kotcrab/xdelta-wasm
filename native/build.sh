@@ -19,7 +19,8 @@ emcc -o public/xdelta3.js \
   -s EXPORTED_RUNTIME_METHODS="['callMain', 'UTF8ToString']" \
   -s EXPORTED_FUNCTIONS="['_main']" \
   -s INVOKE_RUN=0 \
-  -s INITIAL_MEMORY=50331648 \
+  -s INITIAL_MEMORY=52428800 \
   -s ALLOW_MEMORY_GROWTH=0 \
   -s MODULARIZE=1 \
+  -s EXPORT_ES6=1 \
   -s EXPORT_NAME=createXdelta3Module
