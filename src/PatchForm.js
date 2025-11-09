@@ -102,7 +102,6 @@ export default function PatchForm() {
         <ModalOverlay/>
         <ModalContent>
           <ModalHeader>Advanced Settings</ModalHeader>
-          <ModalCloseButton/>
           <ModalBody>
             <Checkbox isChecked={disableChecksum} onChange={(e) => setDisableChecksum(e.target.checked)}>
               Disable checksum verification
