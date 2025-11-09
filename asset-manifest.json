@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/xdelta-wasm/static/js/main.efb85bbc.js",
+    "main.js": "/xdelta-wasm/static/js/main.8d495cf5.js",
     "index.html": "/xdelta-wasm/index.html",
-    "main.efb85bbc.js.map": "/xdelta-wasm/static/js/main.efb85bbc.js.map"
+    "main.8d495cf5.js.map": "/xdelta-wasm/static/js/main.8d495cf5.js.map"
   },
   "entrypoints": [
-    "static/js/main.efb85bbc.js"
+    "static/js/main.8d495cf5.js"
   ]
 }

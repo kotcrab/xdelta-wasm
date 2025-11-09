@@ -62,7 +62,7 @@ onmessage = async function (event) {
   if (!event.data) {
     return
   }
-  const {command, sourceFile, patchFile} = event.data
+  const {command, sourceFile, patchFile, disableChecksum} = event.data
   if (command !== "start") {
     return
   }
@@ -78,7 +78,7 @@ onmessage = async function (event) {
     module.outputFile = outputFile
     module.reportError = reportError
     console.log("Starting module")
-    const result = module.callMain([bufferSize.toString()])
+    const result = module.callMain([bufferSize.toString(), disableChecksum.toString()])
     if (result !== 0) {
       postMessage({final: true, error: true, errorCode: result, errorMessage: errorMessage})
     } else {
