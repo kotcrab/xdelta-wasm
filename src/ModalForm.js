@@ -1,14 +1,25 @@
 import React from "react"
 import ColorModeSwitcher from "./ColorModeSwitcher"
-import {Box, Flex, HStack, Icon, Link, Spacer, Text, VStack} from "@chakra-ui/react"
+import {Flex, HStack, Icon, IconButton, Link, Spacer, Text, VStack} from "@chakra-ui/react"
 import {FaGithub, FaLock} from "react-icons/all"
+import {SettingsIcon} from "@chakra-ui/icons";
 
-export default function ModalForm({children}) {
+export default function ModalForm({onOpenSettings, children}) {
   return (
     <Flex minH="100svh" direction="column" p={3}>
-      <Box alignSelf="flex-end">
+      <Flex width="full" justifyContent="space-between">
+        <IconButton
+          size="md"
+          fontSize="lg"
+          aria-label={`Open settings`}
+          variant="ghost"
+          color="current"
+          marginLeft="2"
+          onClick={onOpenSettings}
+          icon={<SettingsIcon/>}
+        />
         <ColorModeSwitcher/>
-      </Box>
+      </Flex>
       <Spacer/>
       {children}
       <Spacer/>

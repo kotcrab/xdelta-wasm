@@ -19,7 +19,7 @@ void reportError(const char* buffer) {
   EM_ASM({Module.reportError($0)}, buffer);
 }
 
-int processData(int bufferSize) {
+int processData(int bufferSize, int disableChecksum) {
   if (bufferSize < XD3_ALLOCSIZE) {
     bufferSize = XD3_ALLOCSIZE;
   }
@@ -29,7 +29,12 @@ int processData(int bufferSize) {
   xd3_stream stream;
   xd3_source source;
 
-  xd3_init_config(&config, XD3_ADLER32);
+  if (disableChecksum) {
+    xd3_init_config(&config, XD3_ADLER32 | XD3_ADLER32_NOVER);
+  } else {
+    xd3_init_config(&config, XD3_ADLER32);
+  }
+
   memset(&stream, 0, sizeof(stream));
   memset(&source, 0, sizeof(source));
   xd3_config_stream(&stream, &config);
@@ -105,8 +110,9 @@ int processData(int bufferSize) {
 
 int main(int argc, char* argv[]) {
   int bufferSize = atoi(argv[1]);
-  printf("In main(), bufferSize=%d\n", bufferSize);
-  int ret = processData(bufferSize);
+  int disableChecksum = strcmp(argv[2], "true") == 0;
+  printf("In main(), bufferSize=%d, disableChecksum=%d\n", bufferSize, disableChecksum);
+  int ret = processData(bufferSize, disableChecksum);
   if (ret) {
     fprintf(stderr, "Decode error: %d\n", ret);
     return ret;

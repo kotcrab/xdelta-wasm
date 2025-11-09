@@ -1,10 +1,29 @@
 import React, {useState} from "react"
-import {Box, Button, Flex, FormControl, FormLabel, Heading} from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  Checkbox,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  HStack,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useDisclosure
+} from "@chakra-ui/react"
 import ModalForm from "./ModalForm"
 import FilePicker from "./FilePicker"
 import ErrorMessage from "./ErrorMessage"
 import streamSaver from 'streamsaver'
 import * as ponyfill from 'web-streams-polyfill/ponyfill'
+import {WarningTwoIcon} from "@chakra-ui/icons";
 
 export default function PatchForm() {
   const [sourceFile, setSourceFile] = useState(null)
@@ -14,6 +33,9 @@ export default function PatchForm() {
   const [running, setRunning] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
   const [extraErrorMessage, setExtraErrorMessage] = useState(null)
+  const [disableChecksum, setDisableChecksum] = useState(false)
+
+  const {isOpen: isSettingsOpen, onOpen: onOpenSettings, onClose: onCloseSettings} = useDisclosure()
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -58,7 +80,7 @@ export default function PatchForm() {
       if (e.data.error) {
         setErrorMessage("Error occurred while patching")
         if (e.data.errorMessage) {
-          setExtraErrorMessage(`Details: ${e.data.errorMessage} (code ${e.data.errorCode || "unknown"})`)
+          setExtraErrorMessage(`(${e.data.errorMessage})`)
         }
         if (fileStream) {
           fileStream.abort()
@@ -71,34 +93,60 @@ export default function PatchForm() {
       }
       setRunning(false)
     }
-    await worker.postMessage({command: "start", sourceFile: sourceFile, patchFile: patchFile})
+    await worker.postMessage({command: "start", sourceFile: sourceFile, patchFile: patchFile, disableChecksum: disableChecksum})
   }
 
   return (
-    <ModalForm>
-      <Flex width="full" align="center" justifyContent="center">
-        <Box p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg">
-          <Box textAlign="center">
-            <Heading>Xdelta patcher</Heading>
+    <>
+      <Modal isOpen={isSettingsOpen} onClose={onCloseSettings} blockScrollOnMount={false} closeOnOverlayClick={false}>
+        <ModalOverlay/>
+        <ModalContent>
+          <ModalHeader>Advanced Settings</ModalHeader>
+          <ModalCloseButton/>
+          <ModalBody>
+            <Checkbox isChecked={disableChecksum} onChange={(e) => setDisableChecksum(e.target.checked)}>
+              Disable checksum verification
+            </Checkbox>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme='blue' onClick={onCloseSettings}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <ModalForm onOpenSettings={onOpenSettings}>
+        <Flex width="full" align="center" justifyContent="center">
+          <Box p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg">
+            <Box textAlign="center">
+              <Heading>Xdelta patcher</Heading>
+            </Box>
+            <Box my={4} textAlign="left">
+              <form onSubmit={handleSubmit}>
+                {errorMessage && <ErrorMessage message={errorMessage} extraMessage={extraErrorMessage}/>}
+                <FormControl isRequired isInvalid={sourceInvalid}>
+                  <FormLabel>Source file</FormLabel>
+                  <FilePicker onChange={file => setSourceFile(file)} isReadOnly={running}/>
+                </FormControl>
+                <FormControl isRequired mt={6} isInvalid={patchInvalid}>
+                  <FormLabel>Patch file</FormLabel>
+                  <FilePicker onChange={file => setPatchFile(file)} isReadOnly={running}/>
+                </FormControl>
+                <Button type="submit" width="full" colorScheme='blue' mt={6} isLoading={running}>
+                  Apply Patch
+                </Button>
+              </form>
+            </Box>
+            {disableChecksum ? <HStack pt={2}>
+              <WarningTwoIcon/>
+              <Text>
+                Checksum verification is disabled.<br/>
+                This might result in a corrupted patch.
+              </Text>
+            </HStack> : null}
           </Box>
-          <Box my={4} textAlign="left">
-            <form onSubmit={handleSubmit}>
-              {errorMessage && <ErrorMessage message={errorMessage} extraMessage={extraErrorMessage}/>}
-              <FormControl isRequired isInvalid={sourceInvalid}>
-                <FormLabel>Source file</FormLabel>
-                <FilePicker onChange={file => setSourceFile(file)} isReadOnly={running}/>
-              </FormControl>
-              <FormControl isRequired mt={6} isInvalid={patchInvalid}>
-                <FormLabel>Patch file</FormLabel>
-                <FilePicker onChange={file => setPatchFile(file)} isReadOnly={running}/>
-              </FormControl>
-              <Button type="submit" width="full" colorScheme='blue' mt={6} isLoading={running}>
-                Apply Patch
-              </Button>
-            </form>
-          </Box>
-        </Box>
-      </Flex>
-    </ModalForm>
+        </Flex>
+      </ModalForm>
+    </>
   )
 }
