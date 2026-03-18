@@ -18,6 +18,14 @@ const lruCacheOptions = {
 let module = undefined
 let errorMessage = undefined
 
+// Returns the current underlying ArrayBuffer of the WASM heap.
+// wasmMemory.buffer is always up-to-date even after ALLOW_MEMORY_GROWTH resizes.
+// Falls back to module.HEAP8.buffer for compatibility with older builds that do
+// not export wasmMemory.
+function getMemoryBuffer() {
+  return module.wasmMemory ? module.wasmMemory.buffer : module.HEAP8.buffer
+}
+
 // eslint-disable-next-line no-undef
 const reader = new FileReaderSync()
 
@@ -33,8 +41,8 @@ function readFile(file, buffer, offset, size, cache) {
   if (cache && size === bufferSize) {
     const cached = cache.get(offset)
     if (cached) {
-      // Use wasmMemory.buffer directly: HEAP8 may be stale after ALLOW_MEMORY_GROWTH resize
-      new Int8Array(module.wasmMemory.buffer).set(cached.data, buffer)
+      // Use getMemoryBuffer(): always returns the live buffer, even after ALLOW_MEMORY_GROWTH resizes
+      new Int8Array(getMemoryBuffer()).set(cached.data, buffer)
       return cached.read
     }
   }
@@ -47,13 +55,13 @@ function readFile(file, buffer, offset, size, cache) {
   if (cache && size === bufferSize) {
     cache.set(offset, {read: read, data: dataArray})
   }
-  // Use wasmMemory.buffer directly: HEAP8 may be stale after ALLOW_MEMORY_GROWTH resize
-  new Int8Array(module.wasmMemory.buffer).set(dataArray, buffer)
+  // Use getMemoryBuffer(): always returns the live buffer, even after ALLOW_MEMORY_GROWTH resizes
+  new Int8Array(getMemoryBuffer()).set(dataArray, buffer)
   return read
 }
 
 function outputFile(buffer, size) {
-  const dataView = new Uint8Array(module.wasmMemory.buffer, buffer, size)
+  const dataView = new Uint8Array(getMemoryBuffer(), buffer, size)
   const data = new Uint8Array(dataView)
   postMessage({final: false, bytes: data})
 }
