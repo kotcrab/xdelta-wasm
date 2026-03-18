@@ -1,7 +1,9 @@
 import createXdelta3Module from './xdelta3.js'
 import {LRUCache} from './lru-cache.js'
 
-const bufferSize = 64 * 1024
+// 4 MiB chunks reduce overhead from many small Blob slices, FileReaderSync reads,
+// HEAP8 copies, and JS↔WASM boundary crossings, which is critical for performance on mobile.
+const bufferSize = 4 * 1024 * 1024
 
 const state = {
   sourceFile: undefined,
