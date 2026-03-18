@@ -33,7 +33,8 @@ function readFile(file, buffer, offset, size, cache) {
   if (cache && size === bufferSize) {
     const cached = cache.get(offset)
     if (cached) {
-      module.HEAP8.set(cached.data, buffer)
+      // Use wasmMemory.buffer directly: HEAP8 may be stale after ALLOW_MEMORY_GROWTH resize
+      new Int8Array(module.wasmMemory.buffer).set(cached.data, buffer)
       return cached.read
     }
   }
@@ -46,12 +47,13 @@ function readFile(file, buffer, offset, size, cache) {
   if (cache && size === bufferSize) {
     cache.set(offset, {read: read, data: dataArray})
   }
-  module.HEAP8.set(dataArray, buffer)
+  // Use wasmMemory.buffer directly: HEAP8 may be stale after ALLOW_MEMORY_GROWTH resize
+  new Int8Array(module.wasmMemory.buffer).set(dataArray, buffer)
   return read
 }
 
 function outputFile(buffer, size) {
-  const dataView = new Uint8Array(module.HEAP8.buffer, buffer, size)
+  const dataView = new Uint8Array(module.wasmMemory.buffer, buffer, size)
   const data = new Uint8Array(dataView)
   postMessage({final: false, bytes: data})
 }
