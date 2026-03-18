@@ -12,7 +12,7 @@ export default function ErrorMessage({message, extraMessage}) {
         <AlertIcon/>
         <AlertDescription flex="1">
           <Text>{message}</Text>
-          {extraMessage ? <Text>{extraMessage}</Text> : null}
+          {extraMessage ? <Text whiteSpace="pre-wrap">{extraMessage}</Text> : null}
         </AlertDescription>
         <Tooltip label={hasCopied ? "Copied!" : "Copy error"} closeOnClick={false}>
           <IconButton

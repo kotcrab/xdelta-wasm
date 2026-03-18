@@ -88,6 +88,6 @@ onmessage = async function (event) {
     }
   } catch (e) {
     console.log(e)
-    postMessage({final: true, error: true, errorMessage: errorMessage})
+    postMessage({final: true, error: true, errorMessage: errorMessage, exceptionMessage: e?.toString()})
   }
 }
