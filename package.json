@@ -2,7 +2,7 @@
   "name": "xdelta-wasm",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://kotcrab.github.io/xdelta-wasm",
+  "homepage": "https://aviveldan.github.io/xdelta-wasm",
   "dependencies": {
     "@chakra-ui/icons": "^1.1.7",
     "@chakra-ui/react": "^1.8.6",
