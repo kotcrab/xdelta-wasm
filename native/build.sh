@@ -9,6 +9,7 @@ FLAGS="-O2" # for optimized build
 #FLAGS=""   # for debug build
 CFLAGS="$FLAGS -I $BASE/xdelta/xdelta3 -I $XZ_BASE/src/liblzma/api -D XD3_USE_LARGEFILE64=0 -D SIZEOF_SIZE_T=4 -D SECONDARY_DJW -D SECONDARY_FGK -D SECONDARY_LZMA"
 
+mkdir -p $OBJS
 emcc -c $BASE/xdelta/xdelta3/xdelta3.c -o $OBJS/xdelta3.o $CFLAGS
 emcc -c $BASE/xdelta3-wasm.c -o $OBJS/xdelta3-wasm.o $CFLAGS
 emcc -o public/xdelta3.js \
