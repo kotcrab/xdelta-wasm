@@ -11,14 +11,6 @@ Then a web worker is spawned which loads [Xdelta](https://github.com/jmacd/xdelt
 Worker processes the files in chunks to allow handling of large files. Finally, StreamSaver library is used to save output file without using
 too much memory.
 
-### Performance
-
-The worker processes files using a `bufferSize` of 4 MiB. Larger chunks reduce the number of Blob
-slices, `FileReaderSync` reads, `HEAP8` copies, and JS↔WASM boundary crossings, which significantly
-speeds up patching — especially on mobile browsers. Increasing `bufferSize` further can improve
-performance at the cost of higher memory usage. The native build uses `ALLOW_MEMORY_GROWTH=1` so
-the WebAssembly module can expand its heap as needed when larger buffers are in use.
-
 ### Building
 
 Make sure to setup [Emscripten](https://emscripten.org/docs/getting_started/downloads.html) first. If you're on Windows you'll need to use WSL.

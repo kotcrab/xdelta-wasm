@@ -10,6 +10,7 @@ import {
   HStack,
   Modal,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -78,12 +79,8 @@ export default function PatchForm() {
       console.log("Got final worker command")
       if (e.data.error) {
         setErrorMessage("Error occurred while patching")
-        const details = []
-        if (e.data.errorCode !== undefined) details.push(`Error code: ${e.data.errorCode}`)
-        if (e.data.errorMessage) details.push(e.data.errorMessage)
-        if (e.data.exceptionMessage) details.push(e.data.exceptionMessage)
-        if (details.length > 0) {
-          setExtraErrorMessage(details.join('\n'))
+        if (e.data.errorMessage) {
+          setExtraErrorMessage(`(${e.data.errorMessage})`)
         }
         if (fileStream) {
           fileStream.abort()

@@ -1,8 +1,6 @@
 import createXdelta3Module from './xdelta3.js'
 import {LRUCache} from './lru-cache.js'
 
-// 4 MiB chunks reduce overhead from many small Blob slices, FileReaderSync reads,
-// HEAP8 copies, and JS↔WASM boundary crossings, which is critical for performance on mobile.
 const bufferSize = 4 * 1024 * 1024
 
 const state = {
@@ -17,14 +15,6 @@ const lruCacheOptions = {
 
 let module = undefined
 let errorMessage = undefined
-
-// Returns the current underlying ArrayBuffer of the WASM heap.
-// wasmMemory.buffer is always up-to-date even after ALLOW_MEMORY_GROWTH resizes.
-// Falls back to module.HEAP8.buffer for compatibility with older builds that do
-// not export wasmMemory.
-function getMemoryBuffer() {
-  return module.wasmMemory ? module.wasmMemory.buffer : module.HEAP8.buffer
-}
 
 // eslint-disable-next-line no-undef
 const reader = new FileReaderSync()
@@ -41,8 +31,7 @@ function readFile(file, buffer, offset, size, cache) {
   if (cache && size === bufferSize) {
     const cached = cache.get(offset)
     if (cached) {
-      // Use getMemoryBuffer(): always returns the live buffer, even after ALLOW_MEMORY_GROWTH resizes
-      new Int8Array(getMemoryBuffer()).set(cached.data, buffer)
+      module.HEAP8.set(cached.data, buffer)
       return cached.read
     }
   }
@@ -55,13 +44,12 @@ function readFile(file, buffer, offset, size, cache) {
   if (cache && size === bufferSize) {
     cache.set(offset, {read: read, data: dataArray})
   }
-  // Use getMemoryBuffer(): always returns the live buffer, even after ALLOW_MEMORY_GROWTH resizes
-  new Int8Array(getMemoryBuffer()).set(dataArray, buffer)
+  module.HEAP8.set(dataArray, buffer)
   return read
 }
 
 function outputFile(buffer, size) {
-  const dataView = new Uint8Array(getMemoryBuffer(), buffer, size)
+  const dataView = new Uint8Array(module.HEAP8.buffer, buffer, size)
   const data = new Uint8Array(dataView)
   postMessage({final: false, bytes: data})
 }
@@ -98,6 +86,6 @@ onmessage = async function (event) {
     }
   } catch (e) {
     console.log(e)
-    postMessage({final: true, error: true, errorMessage: errorMessage, exceptionMessage: e?.toString()})
+    postMessage({final: true, error: true, errorMessage: errorMessage})
   }
 }
