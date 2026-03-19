@@ -1,7 +1,7 @@
 import createXdelta3Module from './xdelta3.js'
 import {LRUCache} from './lru-cache.js'
 
-const bufferSize = 64 * 1024
+const bufferSize = 4 * 1024 * 1024
 
 const state = {
   sourceFile: undefined,
