@@ -10,7 +10,7 @@ const state = {
 }
 
 const lruCacheOptions = {
-  max: 64
+  max: 32
 }
 
 let module = undefined
