@@ -37,11 +37,3 @@ Finally, you can build the frontend or start the development server.
 npm run build     # Minified build
 npm start         # or start development server
 ```
-
-### Deploy
-
-Native code must be compiled first before doing deploy.
-
-```
-npm run deploy
-```
