@@ -3,15 +3,15 @@
 #include <stdio.h>
 #include <sys/stat.h>
 
-size_t readSource(void* buffer, size_t offset, size_t size) {
+usize_t readSource(void* buffer, xoff_t offset, usize_t size) {
   return EM_ASM_INT({ return Module.readSource($0, $1, $2); }, buffer, offset, size);
 }
 
-size_t readPatch(void* buffer, size_t offset, size_t size) {
+usize_t readPatch(void* buffer, xoff_t offset, usize_t size) {
   return EM_ASM_INT({ return Module.readPatch($0, $1, $2); }, buffer, offset, size);
 }
 
-void writeOutput(void* buffer, size_t size) {
+void writeOutput(void* buffer, usize_t size) {
   EM_ASM({Module.outputFile($0, $1)}, buffer, size);
 }
 
@@ -49,8 +49,8 @@ int processData(int bufferSize, int disableChecksum) {
   void* inputBuffer = malloc(bufferSize);
 
   // Main loop
-  size_t patchPos = 0;
-  size_t patchRead;
+  xoff_t patchPos = 0;
+  usize_t patchRead;
   do {
     patchRead = readPatch(inputBuffer, patchPos, bufferSize);
     patchPos += patchRead;

@@ -20,11 +20,11 @@ let errorMessage = undefined
 const reader = new FileReaderSync()
 
 function readSource(buffer, offset, size) {
-  return readFile(state.sourceFile, buffer, offset, size, state.sourceCache)
+  return readFile(state.sourceFile, buffer, Number(offset), size, state.sourceCache)
 }
 
 function readPatch(buffer, offset, size) {
-  return readFile(state.patchFile, buffer, offset, size, null)
+  return readFile(state.patchFile, buffer, Number(offset), size, null)
 }
 
 function readFile(file, buffer, offset, size, cache) {
@@ -85,7 +85,8 @@ onmessage = async function (event) {
       postMessage({final: true, error: false})
     }
   } catch (e) {
-    console.log(e)
+    console.error(e)
     postMessage({final: true, error: true, errorMessage: errorMessage})
   }
+  state.sourceCache = undefined
 }

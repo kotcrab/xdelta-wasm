@@ -7,7 +7,9 @@ OBJS="./native/out"
 XZ_BASE="$BASE/xz/xz-5.4.6"
 FLAGS="-O2" # for optimized build
 #FLAGS=""   # for debug build
-CFLAGS="$FLAGS -I $BASE/xdelta/xdelta3 -I $XZ_BASE/src/liblzma/api -D XD3_USE_LARGEFILE64=0 -D SIZEOF_SIZE_T=4 -D SECONDARY_DJW -D SECONDARY_FGK -D SECONDARY_LZMA"
+CFLAGS="$FLAGS -I $BASE/xdelta/xdelta3 -I $XZ_BASE/src/liblzma/api -D XD3_USE_LARGEFILE64=1 \
+  -D SIZEOF_SIZE_T=4 -D SIZEOF_UNSIGNED_INT=4 -D SIZEOF_UNSIGNED_LONG=4 -D SIZEOF_UNSIGNED_LONG_LONG=8 \
+  -D SECONDARY_DJW -D SECONDARY_FGK -D SECONDARY_LZMA"
 
 mkdir -p $OBJS
 emcc -c $BASE/xdelta/xdelta3/xdelta3.c -o $OBJS/xdelta3.o $CFLAGS
@@ -20,8 +22,8 @@ emcc -o public/xdelta3.js \
   -s EXPORTED_RUNTIME_METHODS="['callMain', 'UTF8ToString', 'HEAP8']" \
   -s EXPORTED_FUNCTIONS="['_main']" \
   -s INVOKE_RUN=0 \
-  -s INITIAL_MEMORY=52428800 \
-  -s ALLOW_MEMORY_GROWTH=0 \
+  -s INITIAL_MEMORY="32mb" \
+  -s ALLOW_MEMORY_GROWTH=1 \
   -s MODULARIZE=1 \
   -s EXPORT_ES6=1 \
   -s EXPORT_NAME=createXdelta3Module
