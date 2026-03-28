@@ -1,50 +1,32 @@
 import createXdelta3Module from './xdelta3.js'
-import {LRUCache} from './lru-cache.js'
 
 const bufferSize = 4 * 1024 * 1024
-
-const state = {
-  sourceFile: undefined,
-  sourceCache: undefined,
-  patchFile: undefined,
-}
-
-const lruCacheOptions = {
-  max: 32
-}
+const cacheSize = 32
 
 let module = undefined
-let errorMessage = undefined
+const state = {
+  sourceFile: undefined,
+  patchFile: undefined,
+  errorMessage: undefined,
+}
 
 // eslint-disable-next-line no-undef
 const reader = new FileReaderSync()
 
 function readSource(buffer, offset, size) {
-  return readFile(state.sourceFile, buffer, Number(offset), size, state.sourceCache)
+  return readFile(state.sourceFile, buffer, Number(offset), size)
 }
 
 function readPatch(buffer, offset, size) {
-  return readFile(state.patchFile, buffer, Number(offset), size, null)
+  return readFile(state.patchFile, buffer, Number(offset), size)
 }
 
-function readFile(file, buffer, offset, size, cache) {
-  if (cache && size === bufferSize) {
-    const cached = cache.get(offset)
-    if (cached) {
-      module.HEAP8.set(cached.data, buffer)
-      return cached.read
-    }
-  }
+function readFile(file, buffer, offset, size) {
   const end = Math.min(file.size, offset + size)
   const blob = file.slice(offset, end)
   const read = end - offset
-  // console.log("read: " + file.name + " offset: " + offset + " size: " + size);
   const data = reader.readAsArrayBuffer(blob)
-  const dataArray = new Uint8Array(data)
-  if (cache && size === bufferSize) {
-    cache.set(offset, {read: read, data: dataArray})
-  }
-  module.HEAP8.set(dataArray, buffer)
+  module.HEAP8.set(new Uint8Array(data), buffer)
   return read
 }
 
@@ -55,7 +37,7 @@ function outputFile(buffer, size) {
 }
 
 function reportError(buffer) {
-  errorMessage = module.UTF8ToString(buffer)
+  state.errorMessage = module.UTF8ToString(buffer)
 }
 
 onmessage = async function (event) {
@@ -68,7 +50,6 @@ onmessage = async function (event) {
   }
 
   state.sourceFile = sourceFile
-  state.sourceCache = new LRUCache(lruCacheOptions);
   state.patchFile = patchFile
   try {
     console.log("Loading module")
@@ -78,15 +59,15 @@ onmessage = async function (event) {
     module.outputFile = outputFile
     module.reportError = reportError
     console.log("Starting module")
-    const result = module.callMain([bufferSize.toString(), disableChecksum.toString()])
+    const result = module.callMain([bufferSize.toString(), cacheSize.toString(), disableChecksum.toString()])
     if (result !== 0) {
-      postMessage({final: true, error: true, errorCode: result, errorMessage: errorMessage})
+      postMessage({final: true, error: true, errorCode: result, errorMessage: state.errorMessage})
     } else {
       postMessage({final: true, error: false})
     }
   } catch (e) {
     console.error(e)
-    postMessage({final: true, error: true, errorMessage: errorMessage})
+    postMessage({final: true, error: true, errorMessage: state.errorMessage})
   }
-  state.sourceCache = undefined
+  module = undefined
 }
